@@ -60,6 +60,7 @@ The raw transaction data contains no historical default flag because:
 - If Gradient Boosting shows >5% improvement, select it but provide SHAP explanations
 ---
 ## Repository Structure (To be completed in subsequent tasks)
+```
 credit-risk-model/
 ├── .github/workflows/ # CI/CD pipeline (Task 6)
 ├── data/ # Data directory (Task 2-4)
@@ -68,3 +69,4 @@ credit-risk-model/
 ├── tests/ # Unit tests (Task 5)
 ├── Dockerfile # Containerization (Task 6)
 └── requirements.txt # Dependencies (Task 2)
+```
