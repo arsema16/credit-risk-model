@@ -102,19 +102,19 @@ print("KEY INSIGHTS FROM EDA")
 print("=" * 60)
 print("""
 INSIGHT 1: Data Quality
-- [Add your findings]
+- [Add your findings after running the analysis]
 
 INSIGHT 2: Transaction Patterns  
-- [Add your findings]
+- [Add your findings after running the analysis]
 
 INSIGHT 3: Customer Behavior
-- [Add your findings]
+- [Add your findings after running the analysis]
 
 INSIGHT 4: Fraud Patterns
-- [Add your findings]
+- [Add your findings after running the analysis]
 
 INSIGHT 5: RFM Implications
-- [Add your findings]
+- [Add your findings after running the analysis]
 """)
 
 print("\nEDA Complete!")
