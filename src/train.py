@@ -127,11 +127,13 @@ class ModelTrainer:
 
             # Log feature importance for tree-based models
             if hasattr(best_model, 'feature_importances_'):
-                for i, imp in enumerate(best_model.feature_importances_[:10]):
-                    mlflow.log_metric(f"feature_importance_{i}", imp)
+                feature_imps = best_model.feature_importances_[:10]
+                for i, imp in enumerate(feature_imps):
+                    mlflow.log_metric(f"feature_importance_{i}", float(imp))
 
             # Log model
-            signature = infer_signature(X_train, best_model.predict(X_train))
+            y_pred_train = best_model.predict(X_train)
+            signature = infer_signature(X_train, y_pred_train)
             mlflow.sklearn.log_model(
                 best_model,
                 model_name,
