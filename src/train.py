@@ -162,9 +162,10 @@ class ModelTrainer:
         best_score = 0
 
         for model_name in self.models.keys():
-            logger.info(f"\n{'='*50}")
+            separator = "=" * 50
+            logger.info(f"\n{separator}")
             logger.info(f"Training {model_name}")
-            logger.info(f"{'='*50}")
+            logger.info(separator)
 
             try:
                 model, metrics, best_params = self.train_with_tuning(
@@ -191,9 +192,10 @@ class ModelTrainer:
                     mlflow.log_metric(f"{model_name}_{metric}", value)
 
         # Display comparison
-        logger.info(f"\n{'='*50}")
+        separator = "=" * 50
+        logger.info(f"\n{separator}")
         logger.info("MODEL COMPARISON RESULTS")
-        logger.info(f"{'='*50}")
+        logger.info(separator)
 
         comparison_df = pd.DataFrame({
             model_name: result['metrics']
@@ -256,9 +258,10 @@ def main():
     save_feature_columns(X, 'models/feature_columns.json')
 
     # Print final summary
-    print(f"\n{'='*60}")
+    final_separator = "=" * 60
+    print(f"\n{final_separator}")
     print("TRAINING COMPLETE")
-    print(f"{'='*60}")
+    print(final_separator)
     print(f"Best Model: {best_model_name}")
     print(f"Best ROC-AUC: {results[best_model_name]['metrics']['roc_auc']:.4f}")
     print(f"Best F1 Score: {results[best_model_name]['metrics']['f1_score']:.4f}")
