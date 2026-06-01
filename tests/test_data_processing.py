@@ -3,14 +3,13 @@ Unit tests for data processing module
 """
 
 import pandas as pd
+from src.data_processing import AggregateFeatureBuilder, RFMFeatureExtractor
 
 
 class TestAggregateFeatureBuilder:
     """Tests for AggregateFeatureBuilder class"""
 
     def test_aggregate_features_returns_expected_columns(self):
-        from src.data_processing import AggregateFeatureBuilder
-
         # Create sample data
         df = pd.DataFrame({
             'CustomerId': [1, 1, 2, 2, 3],
@@ -21,7 +20,7 @@ class TestAggregateFeatureBuilder:
             'ChannelId': ['web', 'app', 'web', 'app', 'web']
         })
 
-        builder = AggregateFeatureBuilder()
+        builder = AggregateFeatureBuilder(cap_outliers=False)
         builder.fit(df)
         result = builder.transform(df)
 
@@ -42,8 +41,6 @@ class TestAggregateFeatureBuilder:
         assert cust1['total_amount'].iloc[0] == 300  # 100 + 200
 
     def test_handles_single_transaction_customers(self):
-        from src.data_processing import AggregateFeatureBuilder
-
         df = pd.DataFrame({
             'CustomerId': [1, 2],
             'Amount': [100, 200],
@@ -53,7 +50,7 @@ class TestAggregateFeatureBuilder:
             'ChannelId': ['web', 'app']
         })
 
-        builder = AggregateFeatureBuilder()
+        builder = AggregateFeatureBuilder(cap_outliers=False)
         builder.fit(df)
         result = builder.transform(df)
 
@@ -66,8 +63,6 @@ class TestRFMFeatureExtractor:
     """Tests for RFMFeatureExtractor class"""
 
     def test_rfm_extractor_returns_expected_columns(self):
-        from src.data_processing import RFMFeatureExtractor
-
         df = pd.DataFrame({
             'CustomerId': [1, 1, 2, 2, 3],
             'TransactionStartTime': pd.date_range('2024-01-01', periods=5),
