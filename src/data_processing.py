@@ -69,13 +69,17 @@ class RFMScaler(BaseEstimator, TransformerMixin):
     
     def __init__(self):
         self.scaler = StandardScaler()
+        self.fitted = False
         
     def fit(self, X, y=None):
         rfm_features = X[['Recency', 'Frequency', 'Monetary']].values
         self.scaler.fit(rfm_features)
+        self.fitted = True
         return self
     
     def transform(self, X):
+        if not self.fitted:
+            raise ValueError("RFMScaler must be fitted before transform. Call fit() first.")
         X_scaled = X.copy()
         rfm_features = X_scaled[['Recency', 'Frequency', 'Monetary']].values
         scaled = self.scaler.transform(rfm_features)
@@ -95,18 +99,17 @@ class HighRiskLabeler(BaseEstimator, TransformerMixin):
         self.kmeans = KMeans(n_clusters=n_clusters, random_state=random_state, n_init=10)
         self.cluster_risk_mapping = None
         self.cluster_characteristics = None
+        self.fitted = False
         
     def fit(self, X, y=None):
         rfm_scaled = X[['Recency_scaled', 'Frequency_scaled', 'Monetary_scaled']].values
         self.kmeans.fit(rfm_scaled)
         
-        # Analyze cluster centers to determine which is highest risk
         cluster_centers = pd.DataFrame(
             self.kmeans.cluster_centers_,
             columns=['Recency_scaled', 'Frequency_scaled', 'Monetary_scaled']
         )
         
-        # High-risk score: high recency + low frequency + low monetary
         cluster_centers['risk_score'] = (
             cluster_centers['Recency_scaled'] - 
             cluster_centers['Frequency_scaled'] - 
@@ -116,21 +119,22 @@ class HighRiskLabeler(BaseEstimator, TransformerMixin):
         high_risk_cluster = cluster_centers['risk_score'].idxmax()
         self.cluster_risk_mapping = {i: 1 if i == high_risk_cluster else 0 for i in range(self.n_clusters)}
         
-        # Store cluster characteristics for reporting
         self.cluster_characteristics = cluster_centers
+        self.fitted = True
         logger.info(f"High-risk cluster identified: Cluster {high_risk_cluster}")
         logger.info(f"Cluster risk scores: {cluster_centers['risk_score'].to_dict()}")
         
         return self
     
     def transform(self, X):
+        if not self.fitted:
+            raise ValueError("HighRiskLabeler must be fitted before transform. Call fit() first.")
         X_result = X.copy()
         rfm_scaled = X_result[['Recency_scaled', 'Frequency_scaled', 'Monetary_scaled']].values
         clusters = self.kmeans.predict(rfm_scaled)
         X_result['Cluster'] = clusters
         X_result['is_high_risk'] = X_result['Cluster'].map(self.cluster_risk_mapping)
         
-        # Log distribution
         high_risk_count = X_result['is_high_risk'].sum()
         logger.info(f"High-risk customers: {high_risk_count} ({high_risk_count/len(X_result)*100:.2f}%)")
         
@@ -303,8 +307,8 @@ class FeatureProcessor:
         # Step 3: Create RFM-based target variable
         logger.info("\n[Step 3] Creating RFM-based proxy target variable...")
         rfm_data = self.rfm_extractor.transform(df)
-        rfm_scaled = self.rfm_scaler.transform(rfm_data)
-        rfm_labeled = self.high_risk_labeler.fit_transform(rfm_scaled)
+        rfm_scaled = self.rfm_scaler.fit_transform(rfm_data)  # FIXED: Use fit_transform instead of transform
+        rfm_labeled = self.high_risk_labeler.fit_transform(rfm_scaled)  # FIXED: Use fit_transform
         
         # Step 4: Merge all features with target
         logger.info("\n[Step 4] Merging features with target variable...")
@@ -360,7 +364,7 @@ def main():
     print(f"{'='*60}")
     print(f"Output saved to: {args.output}")
     print(f"Shape: {processed_data.shape}")
-    print(f"Target distribution:")
+    print(f"\nTarget distribution:")
     print(processed_data['is_high_risk'].value_counts())
     print(f"\nFeatures: {processed_data.columns.tolist()}")
 
