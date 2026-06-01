@@ -3,15 +3,7 @@
 ## Project Overview
 This project builds an end-to-end credit scoring system for Bati Bank's buy-now-pay-later (BNPL) service using eCommerce transaction data. The model transforms behavioral data into predictive risk signals and deploys them as a REST API.
 
-## Team Members
-- Kerod
-- Mahbubah
-- Feven
 
-## Timeline
-- **Challenge Start**: 28 May 2026
-- **Interim Submission**: 31 May 2026 (8:00 PM UTC)
-- **Final Submission**: 03 June 2026 (8:00 PM UTC)
 
 ---
 
