@@ -1,4 +1,4 @@
-"""
+﻿"""
 Model Training Module for Credit Risk Model
 Task 5: Model training, hyperparameter tuning, and MLflow tracking
 """
@@ -267,10 +267,10 @@ def main():
     print(f"Best Model: {best_model_name}")
     print(f"Best ROC-AUC: {results[best_model_name]['metrics']['roc_auc']:.4f}")
     print(f"Best F1 Score: {results[best_model_name]['metrics']['f1_score']:.4f}")
-    print(f"\nModel saved to: models/best_model.pkl")
-    print(f"Feature columns saved to: models/feature_columns.json")
-    print(f"\nTo view MLflow UI, run: mlflow ui")
-    print(f"Then navigate to: http://localhost:5000")
+    print("\nModel saved to: models/best_model.pkl")
+    print("Feature columns saved to: models/feature_columns.json")
+    print("\nTo view MLflow UI, run: mlflow ui")
+    print("Then navigate to: http://localhost:5000")
 
 
 if __name__ == "__main__":
