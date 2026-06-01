@@ -157,3 +157,82 @@ python src/train.py
 mlflow ui
 ```
 Navigate to http://localhost:5000
+### 9. Run API Locally (Task 6)
+```bash
+uvicorn src.api.main:app --reload
+```
+### 10. Run Tests
+```bash
+pytest tests/
+```
+## API Endpoints (Task 6)
+### POST /predict
+Predict credit risk probability for a customer
+
+Request Body:
+
+```json
+{
+  "customer_id": "CUST12345",
+  "transactions": [
+    {
+      "amount": 150.00,
+      "transaction_start_time": "2024-01-15T10:30:00",
+      "product_category": "Electronics",
+      "channel_id": "web",
+      "fraud_result": 0
+    }
+  ]
+}
+```
+Response:
+```json
+{
+  "customer_id": "CUST12345",
+  "risk_probability": 0.32,
+  "credit_score": 680,
+  "risk_category": "Low Risk",
+  "recommended_loan_amount": 5000,
+  "recommended_loan_duration_months": 12
+}
+```
+## Task Completion Status
+
+| Task | Description | Status | Branch |
+|------|-------------|--------|--------|
+| Task 1 | Credit Risk Business Understanding | ✅ Complete | task-1 |
+| Task 2 | Exploratory Data Analysis | ✅ Complete | task-2 |
+| Task 3 | Feature Engineering Pipeline | ✅ Complete | task-3 |
+| Task 4 | Proxy Target Variable (RFM) | 🔄 In Progress | task-4 |
+| Task 5 | Model Training with MLflow | ⏳ Pending | task-5 |
+| Task 6 | Deployment & CI/CD | ⏳ Pending | task-6 |
+
+---
+
+## Key EDA Insights (Task 2)
+
+| Insight | Finding | Feature Engineering Impact |
+|---------|---------|---------------------------|
+| Customer Concentration | Top 20% drive 80% of volume | Log transformation for monetary features |
+| Temporal Patterns | Peak 10 AM-6 PM, weekend 30% lower | Extract hour, day-of-week features |
+| Missing Data | Gaps in SubscriptionId, ProviderId | Mode/median imputation |
+| Fraud Rate | <1% of transactions | Include fraud_rate as customer feature |
+| Outliers | Unusually large transactions | Cap at 99th percentile |
+
+---
+
+## Technologies Used
+
+- **Python 3.10** - Core language
+- **Pandas/NumPy** - Data manipulation
+- **Scikit-learn** - ML models
+- **Matplotlib/Seaborn** - Visualizations
+- **MLflow** - Experiment tracking
+- **FastAPI** - REST API
+- **Docker** - Containerization
+- **GitHub Actions** - CI/CD
+
+---
+
+## License
+MIT
